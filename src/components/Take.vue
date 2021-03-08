@@ -1,21 +1,18 @@
-<template>
-    <div>take({{ parseInt(arg) }})</div>
-</template>
+<template></template>
 <script>
 export default {
-    props: ["source", "subscribe", "arg"],
-    setup(props, context) {
-        context.expose((n, c) => {
-            let remain = parseInt(props.arg);
-            const dispose = props.source.subscribe((data) => {
-                n(data);
-                if (--remain == 0) {
-                    c();
-                    dispose();
-                }
-            }, c);
-            return dispose;
-        });
-    },
+  setup(props, { expose }) {
+    expose((n, c, s, { source, arg }) => {
+      s.label = parseInt(arg);
+      const dispose = source.subscribe((data) => {
+        n(data);
+        if (--s.label == 0) {
+          c();
+          dispose();
+        }
+      }, c);
+      return dispose;
+    });
+  },
 };
 </script>

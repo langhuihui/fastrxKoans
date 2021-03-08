@@ -1,17 +1,14 @@
-<template>
-    <div>interval{{ arg }}</div>
-</template>
+<template></template>
 <script>
 export default {
-    props: ["subscribe", "arg"],
-    setup(props, context) {
-        context.expose((n, c) => {
-            let i = 0;
-            let clearId = setInterval(() => {
-                n(i++);
-            }, parseInt(props.arg));
-            return () => clearInterval(clearId);
-        });
-    },
+  setup(props, context) {
+    context.expose((n, c, s, ctx) => {
+      s.label = 0;
+      let clearId = setInterval(() => {
+        n({ data: s.label++ });
+      }, parseInt(ctx.arg));
+      return () => clearInterval(clearId);
+    });
+  },
 };
 </script>
