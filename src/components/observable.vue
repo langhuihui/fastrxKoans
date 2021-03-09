@@ -10,7 +10,7 @@
     <div
       v-for="stream in ctx.streams"
       :key="stream"
-      :style="`padding-left:5px;background:${stream.color}`"
+      :style="`padding-left:5px;background:${stream.color};overflow:hidden;max-width:200px`"
     >
       <a-tag
         @click="ctx.clickTag(stream)"
