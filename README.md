@@ -5,3 +5,7 @@
 # 直接访问下面的演示站点
 
 http://langhuihui.gitee.io/rx-show
+
+# 操作说明
+
+![操作说明](https://gitee.com/langhuihui/rx-show/blob/master/RxShow%E8%AF%B4%E6%98%8E.png "操作说明")
