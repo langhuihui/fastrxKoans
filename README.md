@@ -8,4 +8,4 @@ http://langhuihui.gitee.io/rx-show
 
 # 操作说明
 
-![操作说明](https://gitee.com/langhuihui/rx-show/blob/master/RxShow%E8%AF%B4%E6%98%8E.png "操作说明")
+![操作说明](https://images.gitee.com/uploads/images/2021/0310/205646_0dc9c46b_457848.png "RxShow说明.png")
