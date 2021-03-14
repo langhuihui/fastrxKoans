@@ -54,11 +54,11 @@
 </template>
 
 <script setup>
-import { nextTick, ref, watch } from "vue";
+import { nextTick, ref, watch,shallowRef } from "vue";
 import * as components from "./components/rx";
 import Pipeline from "./components/pipeline.jsx";
 import { parse, Node, parseSource } from "./components/node";
-const source = ref();
+const source = shallowRef();
 const input = ref("");
 const demos = [
     "of(1,2,3,4).takeWhile(x=>x<3)",

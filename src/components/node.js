@@ -1,5 +1,5 @@
 import * as components from "./rx"
-import { reactive } from 'vue'
+import { reactive, ref } from 'vue'
 const noop = Function.prototype
 export class Node {
     constructor(name = "", arg = []) {
@@ -7,10 +7,27 @@ export class Node {
         this.arg = arg
         this.streams = reactive([])
         this.sources = reactive([])
+        this.cooldown = ref(0)
         this.source = null
+        this.stopCoolDown = true
         if (arg.length) {
             this.args = arg
         }
+    }
+    resetCooldown() {
+        if (this.stopCoolDown) {
+            const cooldown = () => {
+                this.cooldown.value -= 0.02
+                if (this.cooldown.value >= 0.1) {
+                    requestAnimationFrame(cooldown)
+                } else {
+                    this.stopCoolDown = true
+                }
+            }
+            requestAnimationFrame(cooldown)
+            this.stopCoolDown = false
+        }
+        this.cooldown.value = 1
     }
     toString() {
         return `${this.name}(${this.arg.map(x => typeof x == 'object' || typeof x == 'function' ? '...' : x).join(',')})`
@@ -75,6 +92,7 @@ export class Node {
                         data = { value: data, color: stream.color }
                     }
                     stream.label = data.value.toString()
+                    this.resetCooldown()
                     n(data);
                 },
                 (err) => {
