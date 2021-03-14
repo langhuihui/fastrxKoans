@@ -1,40 +1,46 @@
 <template>
-    <div class="root">
-        <div>
-            <div class="red"></div>
-            <div class="yellow"></div>
-            <div class="green"></div>
-            <span>{{ ctx.toString() }}</span>
+    <div>
+        <div class="subpipes">
+            <slot></slot>
         </div>
-        <slot></slot>
-        <div
-            v-for="stream in ctx.streams"
-            :key="stream"
-            :style="`padding-left:5px;background:${stream.color};overflow:hidden;max-width:200px`"
-        >
-            <a-tag
-                @click="ctx.clickTag(stream)"
-                :color="
-                    stream.status == -1
-                        ? 'error'
-                        : ['default', 'processing', 'warning', 'success'][
-                              stream.status || 0
-                          ]
-                "
+        <div class="root">
+            <div>
+                <div class="red"></div>
+                <div class="yellow"></div>
+                <div class="green"></div>
+                <span>{{ ctx.toString() }}</span>
+            </div>
+
+            <div
+                v-for="stream in ctx.streams"
+                :key="stream"
+                :style="`padding-left:5px;background:${stream.color};overflow:hidden;max-width:200px`"
             >
-                <template #icon>
-                    <sync-outlined :spin="true" v-if="stream.status == 1" />
-                    <CheckSquareOutlined v-else-if="stream.status == 3" />
-                    <CloseCircleOutlined v-else-if="stream.status == -1" />
-                    <PoweroffOutlined v-else-if="stream.status == 2" />
-                    <ApiOutlined v-else />
-                </template>
-                {{ stream.label }}
-            </a-tag>
+                <a-tag
+                    @click="ctx.clickTag(stream)"
+                    :color="
+                        stream.status == -1
+                            ? 'error'
+                            : ['default', 'processing', 'warning', 'success'][
+                                  stream.status || 0
+                              ]
+                    "
+                >
+                    <template #icon>
+                        <sync-outlined :spin="true" v-if="stream.status == 1" />
+                        <CheckSquareOutlined v-else-if="stream.status == 3" />
+                        <CloseCircleOutlined v-else-if="stream.status == -1" />
+                        <PoweroffOutlined v-else-if="stream.status == 2" />
+                        <ApiOutlined v-else />
+                    </template>
+                    {{ stream.label }}
+                </a-tag>
+            </div>
         </div>
     </div>
 </template>
 <script>
+import Pipeline from "./pipeline.jsx";
 export default {
     props: ["ctx"],
 };

@@ -22,8 +22,8 @@
                 {{ item.label }}
             </a-tag>
         </div>
-        <div>
-            <Pipeline v-model:source="source" />
+        <div class="pipeline">
+            <Pipeline :source="source" />
         </div>
         <a-card title="输入表达式" style="width: 1000px">
             <template #extra><a @click="sub">subscribe</a></template>
@@ -57,7 +57,8 @@
 import { nextTick, ref, watch } from "vue";
 import * as components from "./components/rx";
 import Pipeline from "./components/pipeline.jsx";
-const source = ref("");
+import { parse, Node, parseSource } from "./components/node";
+const source = ref();
 const input = ref("");
 const demos = [
     "of(1,2,3,4).takeWhile(x=>x<3)",
@@ -97,12 +98,12 @@ function ok(value) {
     while (disposes.length) {
         disposes.pop()();
     }
-    source.value = value;
+    source.value = parse(parseSource(value));
 }
 watch(input, ok);
 function sub() {
     if (source.value.name != "subscribe") {
-        const node = new Pipeline.Node("subscribe");
+        const node = new Node("subscribe");
         node.source = source.value;
         node.clickTag = (s) => s.dispose();
         source.value = node;
@@ -145,5 +146,38 @@ function sub() {
     flex-direction: column;
     align-self: start;
     color: lightpink;
+}
+.pipeline {
+}
+.pipeline span.arrow,
+.subpipe .before,
+.subpipe .after {
+    font-size: 40px;
+    color: white;
+}
+span.arrow.disable {
+    color: rgb(167, 167, 167);
+}
+.subpipes {
+    display: flex;
+}
+.subpipe {
+    position: relative;
+    display: flex;
+    margin: 5px;
+    align-items: flex-end;
+    margin-bottom: 35px;
+}
+.subpipe .before {
+    content: "↑";
+    position: absolute;
+    bottom: -45px;
+    left: 10px;
+}
+.subpipe .after {
+    content: "↓";
+    position: absolute;
+    bottom: -45px;
+    right: 10px;
 }
 </style>
