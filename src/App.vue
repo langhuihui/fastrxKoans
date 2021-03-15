@@ -1,32 +1,45 @@
 <template>
   <div class="app">
-    <div>
-      <a-tag
-        :key="item"
-        v-for="item in sample"
-        :color="
-          item.status == -1
-            ? 'error'
-            : ['default', 'processing', 'warning', 'success'][item.status || 0]
-        "
-      >
-        <template #icon>
-          <sync-outlined :spin="true" v-if="item.status == 1" />
-          <CheckSquareOutlined v-else-if="item.status == 3" />
-          <CloseCircleOutlined v-else-if="item.status == -1" />
-          <PoweroffOutlined v-else-if="item.status == 2" />
-          <ApiOutlined v-else />
-        </template>
-        {{ item.label }}
-      </a-tag>
+    <div class="head">
+      <img src="./assets/Rx_Logo_S.png" />
+      <div>
+        <div class="title">Rx 可视化学习工具</div>
+        <div class="sub-title">Animated playground for Rx Observables</div>
+      </div>
+      <div style="float: right">
+        <span style="color: white">图例：</span>
+        <a-tag
+          :key="item"
+          v-for="item in sample"
+          :color="
+            item.status == -1
+              ? 'error'
+              : ['default', 'processing', 'warning', 'success'][
+                  item.status || 0
+                ]
+          "
+        >
+          <template #icon>
+            <sync-outlined :spin="true" v-if="item.status == 1" />
+            <CheckSquareOutlined v-else-if="item.status == 3" />
+            <CloseCircleOutlined v-else-if="item.status == -1" />
+            <PoweroffOutlined v-else-if="item.status == 2" />
+            <ApiOutlined v-else />
+          </template>
+          {{ item.label }}
+        </a-tag>
+      </div>
     </div>
+
     <div class="pipeline">
       <Pipeline :source="source" />
     </div>
-    <a-card title="输入表达式" style="width: 1000px">
-      <template #extra><a @click="sub">subscribe</a></template>
-      <a-textarea v-model:value="input" auto-size />
-    </a-card>
+    <div class="input">
+      <a-textarea placeholder="输入表达式" v-model:value="input" auto-size />
+      <a-button @click="sub" type="danger" style="height: auto"
+        >subscribe</a-button
+      >
+    </div>
     <div class="components">
       <a-tag
         color="lightgray"
@@ -37,17 +50,22 @@
         {{ k }}
       </a-tag>
     </div>
-    <a-divider>demo</a-divider>
-    <div class="demo">
-      <a-button
-        type="link"
-        v-for="demo in demos"
-        :key="demo"
-        @click="input = demo"
-      >
-        {{ demo }}
-      </a-button>
-    </div>
+    <div style="height:30px"></div>
+    <a-list bordered size='small'
+      class="demo"
+      item-layout="horizontal"
+      :data-source="demos"
+      :split="false"
+    >
+    <template #header>
+      <div style="color:white">例子</div>
+    </template>
+      <template #renderItem="{ item }">
+        <a-list-item class="demo-item" @click="input = item">
+          {{ item }}</a-list-item
+        >
+      </template>
+    </a-list>
   </div>
 </template>
 
@@ -97,7 +115,9 @@ function ok(value) {
   while (disposes.length) {
     disposes.pop()();
   }
-  source.value = parse(parseSource(value));
+  try {
+    source.value = parse(parseSource(value));
+  } catch (er) {}
 }
 watch(input, ok);
 function sub() {
@@ -124,6 +144,35 @@ function sub() {
   place-items: center;
   place-content: center;
 }
+.head {
+  background: black;
+  height: 60px;
+  width: 100%;
+  padding: 10px;
+}
+.head > div {
+  display: inline-block;
+}
+.head img {
+  width: 35px;
+  height: 35px;
+  vertical-align: super;
+  margin-right: 10px;
+}
+.input {
+  display: flex;
+  width: 80%;
+  justify-content: stretch;
+}
+.title {
+  color: violet;
+  font-size: 18px;
+  font-weight: bold;
+}
+.sub-title {
+  color: white;
+  font-size: 12px;
+}
 .app > div:nth-child(2) {
   min-height: 200px;
   margin: 30px;
@@ -136,13 +185,7 @@ function sub() {
 .components {
   margin-top: 10px;
 }
-.demo {
-  display: flex;
-  align-items: flex-start;
-  flex-direction: column;
-  align-self: start;
-  color: lightpink;
-}
+
 .pipeline {
   text-align: center;
 }
@@ -176,5 +219,18 @@ span.arrow.disable {
   position: absolute;
   bottom: -45px;
   right: 10px;
+}
+.demo {
+  padding: 10px;
+  margin: 10px;
+}
+.demo-item:hover {
+  background: gray;
+}
+.demo-item {
+  background: black;
+  color: darkgray;
+  cursor: pointer;
+  padding-left: 20px;
 }
 </style>
