@@ -148,6 +148,31 @@ export const switchMap = (source, f) => (n, c, s) => {
         currDisposable = (currDisposable && currDisposable(), null)
     }
 }
+export const mergeMap = (source, f) => (n, c, s) => {
+    let subDispose = []
+    let completed = []
+    let sourceEnded = false
+    let dispose = source.subscribe(d => {
+        let i = completed.length
+        completed.push(false)
+        subDispose.push(f(d.value).subscribe(n, err => {
+            completed[i] = true
+            if (sourceEnded) {
+                if (completed.every(x => x)) {
+                    c(err)
+                }
+            }
+        }))
+    }, err => {
+        sourceEnded = true
+        if (completed.every(x => x))
+            c(err)
+    })
+    return () => {
+        dispose()
+        subDispose.forEach(d => d())
+    }
+}
 export const switchMapTo = (source, then) => switchMap(source, () => then)
 export const share = source => {
     let sourceDefer = noop;

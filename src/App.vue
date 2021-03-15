@@ -72,6 +72,7 @@ const demos = [
   "fromEvent(document,'mousemove').map(x=>x.offsetX).throttleTime(1000)",
   "fromEvent(document,'mousemove').map(x=>x.offsetX).debounceTime(1000)",
   "fromEvent(document,'click').switchMap(x=>interval(1000*Math.random()>>0))",
+  "fromEvent(document,'click').mergeMap(x=>interval(1000*Math.random()>>0))",
 ];
 let disposes = [];
 const sample = [

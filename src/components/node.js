@@ -132,6 +132,7 @@ export class Node {
                 stream.status = 2;
                 this.cdSub.value = 1
                 disposable();
+                stream.dispose = noop
             });
         };
         return this.subscribe(n, c)
