@@ -1,33 +1,52 @@
 import * as components from "./rx"
-import { reactive, ref } from 'vue'
+import { reactive, customRef } from 'vue'
 const noop = Function.prototype
+
+function CoolDown(min) {
+    return customRef((track, trigger) => {
+        let value = 0
+        let stop = true
+        let cooldown = () => {
+            value -= 0.05
+            trigger();
+            if (value >= min) {
+                requestAnimationFrame(cooldown)
+            } else {
+                stop = true
+            }
+        }
+        return {
+            get() {
+                track();
+                return value;
+            },
+            set(v) {
+                value = v
+                trigger()
+                if (stop) {
+                    requestAnimationFrame(cooldown)
+                    stop = false
+                }
+            }
+        }
+    })
+}
 export class Node {
     constructor(name = "", arg = []) {
         this.name = name
         this.arg = arg
         this.streams = reactive([])
         this.sources = reactive([])
-        this.cooldown = ref(0)
+        this.cdData = CoolDown(0.1)
+        this.cdSub = CoolDown(0)
         this.source = null
         this.stopCoolDown = true
         if (arg.length) {
             this.args = arg
         }
     }
-    resetCooldown() {
-        if (this.stopCoolDown) {
-            const cooldown = () => {
-                this.cooldown.value -= 0.02
-                if (this.cooldown.value >= 0.1) {
-                    requestAnimationFrame(cooldown)
-                } else {
-                    this.stopCoolDown = true
-                }
-            }
-            requestAnimationFrame(cooldown)
-            this.stopCoolDown = false
-        }
-        this.cooldown.value = 1
+    pickColor() {
+        return this.streams.find(s => s.status == 1)?.color ?? 'rgba(255,255,255,.5)'
     }
     toString() {
         return `${this.name}(${this.arg.map(x => typeof x == 'object' || typeof x == 'function' ? '...' : x).join(',')})`
@@ -70,6 +89,7 @@ export class Node {
         const rx = components[name]
         const f = source ? rx(source, ...arg) : rx(...arg)
         this.subscribe = function (n, c) {
+            this.cdSub.value = 1
             const stream = reactive({
                 status: 1,
             });
@@ -84,27 +104,33 @@ export class Node {
                     "purple",
                 ][streams.length % 7];
             }
+            let onNext = data => {
+                if (typeof data == 'object' && data.color) {
+                    stream.color = data.color
+                } else {
+                    data = { value: data, color: stream.color }
+                }
+                stream.label = data.value.toString()
+                this.cdData.value = 1
+                n(data);
+            }
+            let onComplete = err => {
+                stream.status = err ? -1 : 3;
+                if (err) stream.label = err
+                this.cdData.value = 1
+                c(err);
+                onComplete = noop
+                onNext = noop
+            }
             const disposable = f(
-                (data) => {
-                    if (typeof data == 'object' && data.color) {
-                        stream.color = data.color
-                    } else {
-                        data = { value: data, color: stream.color }
-                    }
-                    stream.label = data.value.toString()
-                    this.resetCooldown()
-                    n(data);
-                },
-                (err) => {
-                    stream.status = err ? -1 : 3;
-                    if (err) stream.label = err
-                    c(err);
-                },
+                (data) => onNext(data),
+                (err) => onComplete(err),
                 stream
             ) || noop;
             streams.push(stream);
             return (stream.dispose = () => {
                 stream.status = 2;
+                this.cdSub.value = 1
                 disposable();
             });
         };
