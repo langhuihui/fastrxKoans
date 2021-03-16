@@ -50,16 +50,18 @@
         {{ k }}
       </a-tag>
     </div>
-    <div style="height:30px"></div>
-    <a-list bordered size='small'
+    <div style="height: 30px"></div>
+    <a-list
+      bordered
+      size="small"
       class="demo"
       item-layout="horizontal"
       :data-source="demos"
       :split="false"
     >
-    <template #header>
-      <div style="color:white">例子</div>
-    </template>
+      <template #header>
+        <div style="color: white" contenteditable="true">例子</div>
+      </template>
       <template #renderItem="{ item }">
         <a-list-item class="demo-item" @click="input = item">
           {{ item }}</a-list-item
@@ -91,6 +93,7 @@ const demos = [
   "fromEvent(document,'mousemove').map(x=>x.offsetX).debounceTime(1000)",
   "fromEvent(document,'click').switchMap(x=>interval(1000*Math.random()>>0))",
   "fromEvent(document,'click').mergeMap(x=>interval(1000*Math.random()>>0))",
+  "fromEvent(document,'compositionend').startWith(1).switchMapTo(fromEvent(document,'keydown').takeUntil(fromEvent(document,'compositionstart'))).map(x=>x.keyCode)",
 ];
 let disposes = [];
 const sample = [

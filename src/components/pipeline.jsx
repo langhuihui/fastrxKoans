@@ -9,12 +9,6 @@ const f = (s) => {
         {jsx}
     </>) : jsx
 }
-const middleArrow = {
-    props: ["color", "cdData", "cdSub"],
-    setup: () => (a, b, { color, cdData, cdSub }) => unref(cdSub) > 0 ? < span class="arrow" style={'color:white' + ';opacity:' + unref(cdSub)} >←</span> : <span class="arrow" style={'color:' + color + ';opacity:' + unref(cdData)}>→</span>
-}
 
-export default {
-    props: ["source"],
-    setup: (props) => () => props.source && f(props.source)
-}
+const middleArrow = ({ color, cdData, cdSub }) => unref(cdSub) > 0 ? < span class="arrow" style={'color:white' + ';opacity:' + unref(cdSub)} >←</span> : <span class="arrow" style={'color:' + color + ';opacity:' + unref(cdData)}>→</span>
+export default ({ source }) => source && f(source)
