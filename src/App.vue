@@ -86,7 +86,7 @@ const demos = [
   "interval(1000).share()",
   "fromEvent(document,'mousemove').map(x=>x.offsetX)",
   "fromEvent(document,'mousedown').switchMapTo(fromEvent(document,'mousemove').map(x=>x.offsetX).takeUntil(fromEvent(document,'mouseup')))",
-  "concat(interval(1000).take(2),interval(1000).take(3),throwError('err'))",
+  "concat(interval(1000).take(2),interval(1000).take(3),throwError('err'),timer(1000))",
   "fromPromise(fetch('http://www.baidu.com'))",
   "fromPromise(fetch('/').then(x=>x.text()))",
   "fromEvent(document,'mousemove').map(x=>x.offsetX).throttleTime(1000)",

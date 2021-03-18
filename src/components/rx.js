@@ -21,9 +21,7 @@ export const fromEvent = (target, name) => (n, c, s) => {
 
 export const interval = period => (n, c, s) => {
     let i = s.label = 0;
-    let clearId = setInterval(() => {
-        n(i++);
-    }, period);
+    let clearId = setInterval(() => n(i++), period);
     return () => clearInterval(clearId);
 }
 
@@ -201,6 +199,33 @@ export const startWith = (source, data) => (n, c, s) => {
 }
 export const throwError = (e) => (n, c) => {
     c(new Error(e))
+}
+export const catchError = (source, f) => (n, c) => {
+    let dispose = noop
+    dispose = source.subscribe(n, err => {
+        if (err) {
+            dispose = f(err).subscribe(n, c)
+        } else {
+            c()
+        }
+    })
+    return () => dispose()
+}
+export const empty = () => (n, c) => c()
+export const never = () => noop
+export const timer = (delay, period = 0) => (n, c, s) => {
+    let dispose = clearTimeout
+    let clearId = setTimeout(() => {
+        if (period) {
+            dispose = clearInterval
+            let i = 0
+            clearId = setInterval(() => n(i++), period);
+        } else {
+            n(0)
+            c()
+        }
+    }, delay)
+    return () => dispose(clearId)
 }
 export const throttleTime = (source, period) => (n, c) => {
     const config = defaultThrottleConfig
