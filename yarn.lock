@@ -537,7 +537,7 @@ copy-anything@^2.0.1:
   dependencies:
     is-what "^3.12.0"
 
-core-js@^3.8.0:
+core-js@^3.7.0, core-js@^3.8.0:
   version "3.9.1"
   resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.9.1.tgz#cec8de593db8eb2a85ffb0dbdeb312cb6e5460ae"
   integrity sha512-gSjRvzkxQc1zjM/5paAmL4idJBFzuJoo+jDjF1tStYFMV2ERfD02HhahhCGXUyHxQRG4yFKVSdO6g62eoRMcDg==
@@ -612,6 +612,13 @@ estree-walker@^2.0.1:
   version "2.0.2"
   resolved "https://registry.yarnpkg.com/estree-walker/-/estree-walker-2.0.2.tgz#52f010178c2a4c117a7757cfe942adb7d2da4cac"
   integrity sha512-Rfkk/Mp/DL7JVje3u18FxFujQlTNR2q6QfMSMB7AvCBx91NGj/ba3kCfza0f6dVDbw7YlRf/nDrn7pQrCCyQ/w==
+
+fastrx@^1.4.4:
+  version "1.4.4"
+  resolved "https://registry.yarnpkg.com/fastrx/-/fastrx-1.4.4.tgz#515727b2d15c8f2da4302a8938f81ea53b80153c"
+  integrity sha512-V9rDB3+Vq1B7AexGQK2g8pasy9z9GXgks37elUxpz12dZkYILAjmSp4nMY5dSGZtZ6N+1xqy8rHKRUEy2c0I4Q==
+  dependencies:
+    core-js "^3.7.0"
 
 fsevents@~2.3.1:
   version "2.3.2"

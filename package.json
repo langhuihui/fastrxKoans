@@ -9,6 +9,7 @@
   "dependencies": {
     "@vitejs/plugin-vue-jsx": "^1.1.2",
     "ant-design-vue": "^2.0.1",
+    "fastrx": "^1.4.4",
     "vue": "^3.0.5"
   },
   "devDependencies": {

@@ -1,8 +1,8 @@
-const rxProxy = new Proxy(() => {
-
-}, {
-    apply(target, _this, args) {
-        console.log(target, _this, args)
-    }
-})
-rxProxy('abc')
+let xyz = 0
+console.log("init")
+export function setXYZ(v) {
+    xyz = v
+}
+export function getXYZ() {
+    return xyz
+}

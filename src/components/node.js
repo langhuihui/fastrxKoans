@@ -1,7 +1,7 @@
-import * as components from "./rx"
 import { reactive, customRef } from 'vue'
 const noop = Function.prototype
-
+import * as fastrx from 'fastrx'
+const Sink = fastrx.Sink
 function CoolDown(min) {
     return customRef((track, trigger) => {
         let value = 0
@@ -62,7 +62,7 @@ export class Node {
         const isNode = x.unProxy
         if (isNode) {
             this.sources.push(isNode)
-            return isNode
+            return s => isNode.subscribe(s)
         }
         return x
     }
@@ -84,15 +84,24 @@ export class Node {
             }
         })
     }
-    subscribe(n, c) {
+    subscribe(...args) {
         const { source, name, streams, arg } = this
-        const rx = components[name]
-        const f = source ? rx(source, ...arg) : rx(...arg)
-        this.subscribe = function (n, c) {
+        //const rx = components[name]
+        // const f = source ? rx(source, ...arg) : rx(...arg)
+        const realrx = name == "subscribe" ? fastrx[name] : fastrx[name](...arg)
+        let f = source ? realrx(s => source.subscribe(s)) : realrx
+        this.subscribe = function (...args) {
+            let sink = args[0]
+            if (name == "subscribe") {
+                sink = new Sink()
+                sink.next = args[0]
+                sink.complete = err => (err ? args[1] : args[2]) || noop
+                f = sink => source.subscribe(sink)
+            }
             this.cdSub.value = 1
-            const stream = reactive({
-                status: 1,
-            });
+            const newSink = new Sink(sink)
+            newSink.status = 1
+            const stream = reactive(newSink);
             if (!source) {
                 stream.color = [
                     "pink",
@@ -104,38 +113,27 @@ export class Node {
                     "purple",
                 ][streams.length % 7];
             }
-            let onNext = data => {
-                if (typeof data == 'object' && data.color) {
-                    stream.color = data.color
-                } else {
-                    data = { value: data, color: stream.color }
-                }
-                stream.label = data.value.toString()
+            sink.color = stream.color
+            newSink.next = data => {
+                stream.label = data.toString()
                 this.cdData.value = 1
-                n(data);
+                sink.next(data);
             }
-            let onComplete = err => {
+            newSink.complete = err => {
                 stream.status = err ? -1 : 3;
                 if (err) stream.label = err
                 this.cdData.value = 1
-                c(err);
-                onComplete = noop
-                onNext = noop
+                sink.complete(err);
             }
-            const disposable = f(
-                (data) => onNext(data),
-                (err) => onComplete(err),
-                stream
-            ) || noop;
             streams.push(stream);
-            return (stream.dispose = () => {
+            newSink.defer(() => {
                 stream.status = 2;
                 this.cdSub.value = 1
-                disposable();
-                stream.dispose = noop
-            });
+            })
+            f(stream);
+            return stream
         };
-        return this.subscribe(n, c)
+        return this.subscribe(...args)
     }
 }
 
@@ -191,7 +189,7 @@ export function parseSource(value) {
     // return last
 }
 
-const define = Object.keys(components).map(name => `const ${name} = (...args)=>(new Node('${name}',args)).pipe();`).join('\n')
+const define = Object.keys(fastrx).map(name => `const ${name} = (...args)=>(new Node('${name}',args)).pipe();`).join('\n')
 export function parse(str) {
     return eval(`${define}${str}`)
 }
