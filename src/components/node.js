@@ -188,8 +188,19 @@ export function parseSource(value) {
     return valid
     // return last
 }
-
-const define = Object.keys(fastrx).map(name => `const ${name} = (...args)=>(new Node('${name}',args)).pipe();`).join('\n')
+const observables = Object.keys(fastrx).filter((x) => {
+    switch (x) {
+        case "default":
+        case "pipe":
+        case "toPromise":
+        case "toRef":
+        case "reusePipe":
+        case "Sink":
+            return false;
+    }
+    return true;
+});
+const define = observables.map(name => `const ${name} = (...args)=>(new Node('${name}',args)).pipe();`).join('\n')
 export function parse(str) {
     return eval(`${define}${str}`)
 }
