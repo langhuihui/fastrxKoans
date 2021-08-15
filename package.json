@@ -7,14 +7,18 @@
     "serve": "vite preview"
   },
   "dependencies": {
+    "@highlightjs/vue-plugin": "^2.0.1",
     "@vitejs/plugin-vue-jsx": "^1.1.2",
-    "ant-design-vue": "^2.0.1",
-    "fastrx": "^1.4.4",
-    "vue": "^3.0.5"
+    "ant-design-vue": "^2.2.6",
+    "fastrx": "^2.1.0",
+    "highlight.js": "^11.2.0",
+    "vue": "^3.2.1",
+    "vue-router": "4",
+    "vuex": "^4.0.2"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^1.1.5",
-    "@vue/compiler-sfc": "^3.0.5",
+    "@vue/compiler-sfc": "^3.2.1",
     "less": "^4.1.1",
     "vite": "^2.0.5"
   }

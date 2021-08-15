@@ -52,6 +52,9 @@ export default {
 };
 </script>
 <style scoped>
+.subpipes {
+  display: flex;
+}
 .root {
   border-radius: 5px 5px 0 0;
   background: lightgray;

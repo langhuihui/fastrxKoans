@@ -1,5 +1,5 @@
 <template>
-  <div class="app">
+  <div class="viz">
     <div class="head">
       <img src="./assets/Rx_Logo_S.png" />
       <div>
@@ -32,7 +32,7 @@
     </div>
 
     <div class="pipeline">
-      <Pipeline :source="source" />
+      <Pipeline :source="source"/>
     </div>
     <div class="input">
       <a-textarea placeholder="输入表达式" v-model:value="input" auto-size />
@@ -154,11 +154,20 @@ function sub() {
 </script>
 
 <style>
-.app {
+.viz {
   display: flex;
   flex-direction: column;
   place-items: center;
   place-content: center;
+}
+.viz > div:nth-child(2) {
+  min-height: 200px;
+  margin: 30px;
+  width: 100vw;
+  overflow: auto;
+}
+.viz > div:nth-child(2) > * {
+  display: inline-block;
 }
 .head {
   background: black;
@@ -189,15 +198,7 @@ function sub() {
   color: white;
   font-size: 12px;
 }
-.app > div:nth-child(2) {
-  min-height: 200px;
-  margin: 30px;
-  width: 100vw;
-  overflow: auto;
-}
-.app > div:nth-child(2) > * {
-  display: inline-block;
-}
+
 .components {
   margin-top: 10px;
 }
@@ -205,6 +206,7 @@ function sub() {
 .pipeline {
   text-align: center;
 }
+
 .pipeline span.arrow,
 .subpipe .before,
 .subpipe .after {
@@ -214,9 +216,7 @@ function sub() {
 span.arrow.disable {
   color: rgb(167, 167, 167);
 }
-.subpipes {
-  display: flex;
-}
+
 .subpipe {
   position: relative;
   display: flex;
@@ -236,14 +236,14 @@ span.arrow.disable {
   bottom: -45px;
   right: 10px;
 }
-.demo {
+.viz .demo {
   padding: 10px;
   margin: 10px;
 }
-.demo-item:hover {
+.viz .demo-item:hover {
   background: gray;
 }
-.demo-item {
+.viz .demo-item {
   background: black;
   color: darkgray;
   cursor: pointer;
