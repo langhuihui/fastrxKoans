@@ -4,7 +4,7 @@
       :style="{ overflow: 'auto', height: '100vh', position: 'fixed', left: 0 }"
     >
       <div class="logo" />
-      <a-menu theme="dark" mode="inline" @click="onClick" :openKeys="['koans']">
+      <a-menu theme="dark" mode="inline" @click="onClick" :selectedKeys="['streams']" :openKeys="['koans']">
         <a-sub-menu key="koans">
           <template #title
             ><shop-outlined /> <span class="nav-text">Koans</span></template
