@@ -4,12 +4,7 @@
       :style="{ overflow: 'auto', height: '100vh', position: 'fixed', left: 0 }"
     >
       <div class="logo" />
-      <a-menu
-        theme="dark"
-        mode="inline"
-        @click="onClick"
-        :openKeys="['koans']"
-      >
+      <a-menu theme="dark" mode="inline" @click="onClick" :openKeys="['koans']">
         <a-sub-menu key="koans">
           <template #title
             ><shop-outlined /> <span class="nav-text">Koans</span></template
@@ -34,10 +29,17 @@
           <appstore-outlined />
           <span class="nav-text">弹珠图</span>
         </a-menu-item>
-        <a-menu-item key="github.com/langhuihui/fastrx">
-          <cloud-outlined />
-          <span class="nav-text">github</span>
-        </a-menu-item>
+        <a-sub-menu>
+          <template #title>
+            <cloud-outlined />
+          </template>
+          <a-menu-item key="github.com/langhuihui/fastrx">
+            <span class="nav-text">fastrx</span>
+          </a-menu-item>
+          <a-menu-item key="github.com/langhuihui/fastrxKoans">
+            <span class="nav-text">本程序</span>
+          </a-menu-item>
+        </a-sub-menu>
         <a-menu-item key="space.bilibili.com/328443019">
           <video-camera-outlined />
           <span class="nav-text">视频教程</span>
