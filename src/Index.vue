@@ -32,6 +32,7 @@
         <a-sub-menu>
           <template #title>
             <cloud-outlined />
+            <span class="nav-text">github</span>
           </template>
           <a-menu-item key="github.com/langhuihui/fastrx">
             <span class="nav-text">fastrx</span>
