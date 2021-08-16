@@ -4,7 +4,7 @@
 
 # 直接访问下面的演示站点
 
-http://langhuihui.gitee.io/rx-show
+https://fastrx-lab.vercel.app/
 
 # 操作说明
 

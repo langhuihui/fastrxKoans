@@ -1,7 +1,7 @@
 import { streams, composable, querying, time, events, advanced, mapping, imperative } from './lessons';
 import getQ from './questions'
 import { watchEffect, reactive } from 'vue'
-import rx from 'fastrx/dist/index'
+import rx from 'fastrx'
 
 export default {
     state() {

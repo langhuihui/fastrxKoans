@@ -97,6 +97,7 @@ const demos = [
   "race(fromEvent(document,'click'),interval(2000),interval(3000))",
   "interval(1000).share()",
   "fromEvent(document,'mousemove').map(x=>x.offsetX)",
+  "fromEvent(document,'mousedown').timeInterval().map(x=>x.interval)",
   "fromEvent(document,'mousedown').switchMapTo(fromEvent(document,'mousemove').map(x=>x.offsetX).takeUntil(fromEvent(document,'mouseup')))",
   "concat(interval(1000).take(2),interval(1000).take(3),throwError('err'),timer(1000))",
   "fromPromise(fetch('http://www.baidu.com'))",

@@ -1,4 +1,4 @@
-import rx from "fastrx/dist/index";
+import rx from "fastrx";
 
 const Range = {
     create(start, end) {
