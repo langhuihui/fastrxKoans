@@ -1,5 +1,5 @@
 import rx from "fastrx";
-
+import EventEmitter from "eventemitter3";
 const Range = {
     create(start, end) {
         const results = [];
@@ -27,10 +27,10 @@ class BaseQ {
         try {
             const answer = Array.isArray(value) ? value.reduce((acc, c) => acc.replace('__', c), this.code) : this.code.replace('__', value);
             let pass = true
-            const f = new Function("rx,Range,equal", answer);
+            const f = new Function("rx,Range,EventEmitter,equal", answer);
             const sub = rx.subject()
             sub.debounceTime(this.wait).take(1).subscribe(() => pass ? resolve() : reject('wrong'))
-            f(rx, Range, (a, b) => {
+            f(rx, Range,EventEmitter, (a, b) => {
                 pass = pass && a == b
                 sub.next(pass)
             });

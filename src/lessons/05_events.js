@@ -1,23 +1,18 @@
 export default [
     ['the main event', () => {
         const received = [];
-        const subscription = rx.fromEvent(document, 'change')
-            .subscribe(({ payload }) => received.push(payload));
+        const e = new EventEmitter();
+        const subscription = rx.fromEvent(e, 'change')
+            .subscribe(received.push.bind(received));
 
-        const newEvent = s => {
-            const e = new Event('change')
-            e.payload = s;
-            return e
-        }
-
-        document.dispatchEvent(newEvent('R'));
-        document.dispatchEvent(newEvent('x'));
-        document.dispatchEvent(newEvent('J'));
-        document.dispatchEvent(newEvent('S'));
+        e.emit('change', 'R');
+        e.emit('change', 'x');
+        e.emit('change', 'J');
+        e.emit('change', 'S');
 
         subscription.dispose();
 
-        document.dispatchEvent(newEvent('!'));
+        e.emit('change', '!');
 
         equal(__, received.join(''));
     }]

@@ -13,20 +13,15 @@ export default [
 
     ['querying over events', () => {
         let results = 0;
-
-        rx.fromEvent(document, 'click')
+        const e = new EventEmitter();
+        rx.fromEvent(e, 'click')
             .filter(click => click.x === click.y)
             .map(click => __ + __)
             .subscribe(x => { results = x; });
-            const newEvent = (x,y) => {
-                const e = new Event('click')
-                e.x = x
-                e.y = y
-                return e
-            }
-            document.dispatchEvent(newEvent(100,50));
-            document.dispatchEvent(newEvent(75,75));
-            document.dispatchEvent(newEvent(40,80));
+           
+            e.emit('click', {x: 100, y: 50});
+            e.emit('click', {x: 75,  y: 75});
+            e.emit('click', {x: 40,  y: 80});
 
         equal(results, 150);
     }],
